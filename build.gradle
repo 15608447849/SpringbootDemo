@@ -1,0 +1,113 @@
+buildscript {
+    repositories {
+        maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "https://mirrors.huaweicloud.com/repository/maven/" }
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.4.1"
+    }
+}
+
+
+
+
+subprojects {
+
+    repositories {
+        maven {
+            allowInsecureProtocol = true
+            url 'http://220.168.73.85:6938/repository/maven-snapshots/'
+        }
+        maven{ url 'https://maven.aliyun.com/repository/central'}
+        maven{ url 'https://maven.aliyun.com/repository/public'}
+        maven{ url 'https://maven.aliyun.com/repository/google'}
+        maven{ url 'https://maven.aliyun.com/repository/apache-snapshots'}
+        maven { url "https://jitpack.io" }
+        mavenCentral()
+        google()
+    }
+
+
+    apply plugin: 'java'
+    apply plugin: 'groovy'
+    apply plugin: 'java-library'
+
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    compileJava {
+        [compileJava]*.options*.encoding = 'UTF-8'
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+
+    tasks.withType(Javadoc) {
+        failOnError false
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.addStringOption('encoding', 'UTF-8')
+        options.addStringOption('charSet', 'UTF-8')
+        options.addStringOption('-Xlint', 'unchecked')
+        options.addStringOption('-Xlint', 'deprecation')
+        options.addStringOption('deprecation', 'true')
+
+    }
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
+
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
+
+    configurations {
+        all{
+            // 依赖缓存时效
+            resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+            resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+        }
+    }
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+    }
+
+
+    bootJar.zip64=true
+    bootJar.doLast{
+
+        copy {
+            File jar = file(buildDir.path+"/libs/${archiveName}")
+            File storage = file(SHODOW_COMPLETE_JAR_DIR+"/${archiveName}")
+            from jar
+            into storage.parent
+            println("打包: ${archiveName} \t时间: ${new Date().format("yyyyMMdd HH:mm:ss:SSS")} \t大小: ${jar.length()} byte" +
+                    "\n原位置: ${jar}\n移动到: ${  storage }")
+        }.with {
+            project.exec {
+                executable '../gradlew.bat'
+                args 'clean'
+            }
+            println("******** 已清理模块 ********")
+        }
+    }
+}
+
