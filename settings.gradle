@@ -1,4 +1,6 @@
 rootProject.name = 'SpringbootDemo'
 
+include 'mydep'
+include 'progcomm'
 include 'progdemo1'
 

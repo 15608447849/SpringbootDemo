@@ -1,2 +1,7 @@
 server:
   port: 7001
+
+llm:
+  ollama:
+    url: http://10.12.0.8:11434
+    model: qwen2.5:1.5b

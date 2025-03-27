@@ -1,27 +1,24 @@
-buildscript {
-    repositories {
-        maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
-        maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "https://mirrors.huaweicloud.com/repository/maven/" }
-        google()
-        mavenCentral()
-    }
 
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.4.1"
-    }
+// 应用插件
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'groovy'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
-
-
 
 
 subprojects {
 
+    apply plugin: 'java'
+    apply plugin: 'java-library'
+    apply plugin: 'groovy'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+
     repositories {
-        maven {
-            allowInsecureProtocol = true
-            url 'http://220.168.73.85:6938/repository/maven-snapshots/'
-        }
         maven{ url 'https://maven.aliyun.com/repository/central'}
         maven{ url 'https://maven.aliyun.com/repository/public'}
         maven{ url 'https://maven.aliyun.com/repository/google'}
@@ -29,19 +26,15 @@ subprojects {
         maven { url "https://jitpack.io" }
         mavenCentral()
         google()
+
     }
 
 
-    apply plugin: 'java'
-    apply plugin: 'groovy'
-    apply plugin: 'java-library'
+    group = 'com.demo'
+    version = '0.0.1-SNAPSHOT'
 
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'io.spring.dependency-management'
-
-
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 
     compileJava {
         [compileJava]*.options*.encoding = 'UTF-8'
@@ -64,17 +57,18 @@ subprojects {
     }
 
     task sourcesJar(type: Jar) {
-        classifier = 'sources'
+        archiveClassifier = 'sources'
         from sourceSets.main.allSource
     }
 
     task javadocJar(type: Jar) {
-        classifier = 'javadoc'
+        archiveClassifier = 'javadoc'
         from javadoc
     }
 
-    artifacts {
-        archives javadocJar, sourcesJar
+    java {
+        withJavadocJar()
+        withSourcesJar()
     }
 
     configurations {
@@ -85,7 +79,10 @@ subprojects {
         }
     }
 
-    dependencies {
+    dependencies  {
+        implementation 'org.projectlombok:lombok:1.18.30'
+        annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
         implementation 'org.springframework.boot:spring-boot-starter'
         implementation 'org.springframework.boot:spring-boot-starter-web'
     }
@@ -93,7 +90,6 @@ subprojects {
 
     bootJar.zip64=true
     bootJar.doLast{
-
         copy {
             File jar = file(buildDir.path+"/libs/${archiveName}")
             File storage = file(SHODOW_COMPLETE_JAR_DIR+"/${archiveName}")
