@@ -8,6 +8,9 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import org.json.JSONArray;
 import org.json.JSONTokener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -27,7 +30,7 @@ import java.util.List;
  */
 public class GoogleGsonUtil {
 
-    private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(Object.class);
+    private static final Logger logger = LoggerFactory.getLogger(GoogleGsonUtil.class);
 
     public interface GsonPauseErrorPrintI{
         void jsonPauseError(String jsonText,Class<?> classType,Type type, Throwable e,String errorInfo);
@@ -134,10 +137,8 @@ public class GoogleGsonUtil {
         }
     };
 
-
     private final static Gson builder =  new GsonBuilder()
             .disableHtmlEscaping()
-
             .registerTypeAdapter(long.class, (JsonSerializer<Long>) (src, typeOfSrc, context) -> new JsonPrimitive(String.valueOf(src)) )
             .registerTypeAdapter(Long.class, (JsonSerializer<Long>) (src, typeOfSrc, context) -> new JsonPrimitive(String.valueOf(src)) )
             .registerTypeAdapter(BigInteger.class, (JsonSerializer<BigInteger>) (src, typeOfSrc, context) -> new JsonPrimitive(String.valueOf(src)) )
@@ -153,31 +154,10 @@ public class GoogleGsonUtil {
                 }
                 return new JsonPrimitive(var);
             })
-
             .registerTypeAdapter(Timestamp.class, TIMESTAMP_ADAPTER)
             .registerTypeAdapter(java.sql.Time.class, DATE_ADAPTER)
             .registerTypeAdapter(java.sql.Date.class, TIME_ADAPTER)
-
             .create();
-
-    private static class B{
-//                        Long a;
-        BigDecimal b;
-//        BigInteger C;
-//        java.sql.Date d;
-    }
-
-    public static void main(String[] args) {
-
-        String json = "{\"a\":\"\",\"b\":\"79949.0000000007\",\"C\":\"155555555555555555555555557\",\"d\":\"4\"}";
-        B b = GoogleGsonUtil.jsonToJavaBean(json, B.class);
-
-        System.out.println(
-                GoogleGsonUtil.javaBeanToJson(b)
-        );
-
-    }
-
 
 
     /** 判断是否为JSON格式字符串 */
@@ -191,7 +171,6 @@ public class GoogleGsonUtil {
         }
         return true;
     }
-
 
     /**
      * javabean to json
@@ -221,7 +200,6 @@ public class GoogleGsonUtil {
         }
         return null;
     }
-
 
     /**
      * json to javabean
@@ -300,7 +278,4 @@ public class GoogleGsonUtil {
         }
         return null;
     }
-
-
-
 }

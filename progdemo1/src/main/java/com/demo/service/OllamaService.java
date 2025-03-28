@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class OllamaService {
 
-
     private ChatLanguageModel model;
 
     @Autowired

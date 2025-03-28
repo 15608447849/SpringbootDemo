@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 @Slf4j
-@Configuration
+//@Configuration
 public class RespConfig implements WebMvcConfigurer {
 
     @Override
