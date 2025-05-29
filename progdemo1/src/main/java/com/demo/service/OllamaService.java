@@ -24,9 +24,10 @@ public class OllamaService {
                 .build();
     }
 
-    public String chat(String message) {
+    public String chat(String ask) {
         // 简单的聊天交互
-        return model.generate(message);
+        log.info("问题: {}", ask);
+        return model.generate(ask);
     }
 
 }

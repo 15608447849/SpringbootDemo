@@ -1,6 +1,11 @@
 package com.demo.controller;
 
+import com.bottle.jdbc.JDBC;
+import com.bottle.jdbc.define.DataBaseType;
+import com.demo.config.DatabaseConfig;
 import com.demo.config.LLMConfig;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,13 +14,19 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 public class TestController {
 
     @Autowired
     private LLMConfig  llmConfig;
+
+    @Autowired
+    private DatabaseConfig databaseConfig;
+
     @Autowired
     private RequestMappingHandlerAdapter handlerAdapter;
 
@@ -23,9 +34,15 @@ public class TestController {
     public String index(){
         return String.format("demo local time : %s",  new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
     }
-    @RequestMapping("/bean")
-    public Object bean(){
-        return llmConfig;
+
+    @RequestMapping("/llmconfig")
+    public Object llm(){
+        return llmConfig.toString();
+    }
+
+    @RequestMapping("/dbconfig")
+    public Object database(){
+        return databaseConfig.toString();
     }
 
     @RequestMapping("/convt")
@@ -42,8 +59,10 @@ public class TestController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
-
+    @RequestMapping("/querydb")
+    public Object querydb() {
+        return Objects.requireNonNull(JDBC.getFacadeFirst()).query("SELECT * FROM tb_sys_dictionary ", null, null);
+    }
 }

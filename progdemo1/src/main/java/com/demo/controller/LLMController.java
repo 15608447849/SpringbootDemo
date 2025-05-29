@@ -16,7 +16,7 @@ public class LLMController {
     private OllamaService ollamaService;
 
     @RequestMapping("/chat")
-    public String simpleChat(@RequestParam(required = false, defaultValue = "你是谁?") String ask){
+    public String simpleChat(@RequestParam(required = false, defaultValue = "你是谁") String ask){
         return ollamaService.chat(ask);
     }
 

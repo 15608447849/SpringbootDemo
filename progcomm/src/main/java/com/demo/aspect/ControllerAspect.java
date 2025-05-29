@@ -32,7 +32,6 @@ public class ControllerAspect {
                     Arrays.toString(joinPoint.getArgs()),
                     result);
 
-
             if (result instanceof RespResult){
                 resp = (RespResult) result;
             }else{
