@@ -1,15 +1,29 @@
 server:
-  port: 7001
+  address:::
+  port: 8001
+  # -Djava.net.preferIPv6Addresses=true
 
 llm:
   ollama:
-    url: http://10.12.0.8:11434
-    model: qwen2.5:1.5b
+    url: http://127.0.0.1:7099
+#    model: deepseek-r1:14b
+    model: qwen3:8b
+
+  deepseek:
+    url: https://api.deepseek.com/v1
+    model: deepseek-chat
+    appkey: sk-dd3d139eb5de423fa118300e7b2d7e82
 
 jdbc:
   sources:
-    - url: jdbc:mysql://10.11.0.222:3306/erp-global?
+    - url: jdbc:mysql://192.168.1.110:3306/mydb?
       username: root
-      password: 666
+      password: '000000'
+
+wx:
+  minprog:
+    appid: wx9b378439484b1ad2
+    appsecret: bbbb7659c28f354679476e32aa14ce62
+
 
 

@@ -75,7 +75,7 @@ public class JDBC {
             JDBCConnection pool = databasePoolMap.get(k);
             return checkDBConnection( new JDBCSessionFacade(pool) );
         }
-      return null;
+     throw new RuntimeException("【异常】找不到指定的数据库");
     }
 
 }

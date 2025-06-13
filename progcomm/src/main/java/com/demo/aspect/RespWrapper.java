@@ -64,7 +64,10 @@ public class RespWrapper implements ResponseBodyAdvice<Object> {
     // 处理异常
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<RespResult> handleBusinessException(Throwable e) {
+        log.error("handleBusinessException",e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                e instanceof IllegalStateException || e instanceof IllegalArgumentException ?
+                        new RespResult().fail(e.getMessage()) :
                 new RespResult().error(StringUtil.printExceptInfo(e))
         )
         ;

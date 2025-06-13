@@ -1,4 +1,4 @@
-package com.demo.service;
+package com.demo.service.llm;
 
 import com.demo.config.LLMConfig;
 import dev.langchain4j.model.chat.ChatLanguageModel;
@@ -15,7 +15,7 @@ public class OllamaService {
 
     @Autowired
     public OllamaService(LLMConfig llmConfig) {
-        log.info("llm 配置 {}", llmConfig);
+        log.info("llm 配置 {}", llmConfig.getOllama());
         // 初始化Ollama模型
         this.model = OllamaChatModel.builder()
                 .baseUrl(llmConfig.getOllama().getUrl()) // Ollama 默认地址

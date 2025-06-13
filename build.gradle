@@ -41,12 +41,12 @@ subprojects {
         [compileJava]*.options*.encoding = 'UTF-8'
     }
 
-    tasks.withType(JavaCompile) {
+    tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
 
-    tasks.withType(Javadoc) {
+    tasks.withType(Javadoc).configureEach {
         failOnError false
         options.addStringOption('Xdoclint:none', '-quiet')
         options.addStringOption('encoding', 'UTF-8')
@@ -57,12 +57,12 @@ subprojects {
 
     }
 
-    task sourcesJar(type: Jar) {
+    tasks.register('sourcesJar', Jar) {
         archiveClassifier = 'sources'
         from sourceSets.main.allSource
     }
 
-    task javadocJar(type: Jar) {
+    tasks.register('javadocJar', Jar) {
         archiveClassifier = 'javadoc'
         from javadoc
     }
@@ -73,14 +73,14 @@ subprojects {
     }
 
     configurations {
-        all{
+        configureEach {
             // 依赖缓存时效
             resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
             resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
         }
     }
 
-    configurations.all {
+    configurations.configureEach {
         exclude group: 'ch.qos.logback', module: 'logback-classic'
         exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
     }
@@ -102,14 +102,14 @@ subprojects {
     bootJar.zip64=true
     bootJar.doLast{
         copy {
-            File jar = file(buildDir.path+"/libs/${archiveName}")
-            File storage = file(SHODOW_COMPLETE_JAR_DIR+"/${archiveName}")
+            File jar = file(layout.buildDirectory +"/libs/${archiveFileName}")
+            File storage = file(SHODOW_COMPLETE_JAR_DIR+"/${archiveFileName}")
             from jar
             into storage.parent
-            println("打包: ${archiveName} \t时间: ${new Date().format("yyyyMMdd HH:mm:ss:SSS")} \t大小: ${jar.length()} byte" +
+            println("打包: ${archiveFileName} \t时间: ${new Date().format("yyyyMMdd HH:mm:ss:SSS")} \t大小: ${jar.length()} byte" +
                     "\n原位置: ${jar}\n移动到: ${  storage }")
         }.with {
-            project.exec {
+            def result = providers.exec {
                 executable '../gradlew.bat'
                 args 'clean'
             }

@@ -63,6 +63,6 @@ public class TestController {
 
     @RequestMapping("/querydb")
     public Object querydb() {
-        return Objects.requireNonNull(JDBC.getFacadeFirst()).query("SELECT * FROM tb_sys_dictionary ", null, null);
+        return Objects.requireNonNull(JDBC.getFacadeFirst()).query("SELECT * FROM t_user ", null, null);
     }
 }

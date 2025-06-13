@@ -49,7 +49,7 @@ public class JDBCUtil {
         if (beanClass.getName().contains("$")){
             return getObjectFromInnerClass(beanClass);
         }
-        return beanClass.newInstance();
+        return beanClass.getDeclaredConstructor().newInstance();
     }
 
     /* 创建内部类 */

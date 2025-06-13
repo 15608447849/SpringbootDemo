@@ -13,14 +13,23 @@ import lombok.Data;
 @ConfigurationProperties(prefix = "llm")
 public class LLMConfig {
 
-    private double temperature = 0.7;
-
     @Data
-    public static class Ollama {
+    public static class OllamaProperties {
         private String url;
         private String model;
     }
-    private Ollama ollama;
+
+    @Data
+    public static class DeepseekProperties {
+        private String url;
+        private String model;
+        private String appkey;
+    }
+
+
+    private double temperature = 0.7;
+    private OllamaProperties ollama;
+    private DeepseekProperties deepseek;
 
 
 }

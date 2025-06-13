@@ -4,6 +4,7 @@ import com.bottle.jdbc.JDBC;
 import com.bottle.jdbc.imp.JDBCConnection;
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +20,7 @@ import java.util.Properties;
 
 import static com.bottle.util.ObjectUtil.objectToProperties;
 
-
+@Slf4j
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "jdbc")
@@ -46,7 +47,7 @@ public class DatabaseConfig {
         if (sources.isEmpty()) return;
         for (DataSourceConfig source : sources) {
             JDBCConnection pool = JDBC.loadDatabase(objectToProperties(source));
-
+            log.info("加载数据库连接池配置: {}", pool);
         }
     }
 

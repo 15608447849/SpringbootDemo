@@ -29,6 +29,7 @@ public abstract class JDBCSessionManagerAbs extends SessionManagerAbs<Connection
        this.username = userName;
        this.password = password;
        this.dataBaseName = dataBaseName;
+
    }
 
     public DataBaseType getDataBaseType(){
