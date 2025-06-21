@@ -1,6 +1,6 @@
 package com.demo.service.wchat;
 
-import com.bottle.util.GoogleGsonUtil;
+import com.bottle.util.GsonUtil;
 import com.demo.config.WXConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class WXMinProgService {
         RestTemplate restTemplate = new RestTemplate();
         String response = restTemplate.getForObject(url, String.class);
         log.info("小程序访问jscode2session = {}", response);
-        Map<String,String> map = GoogleGsonUtil.string2Map(response);
+        Map<String,String> map = GsonUtil.string2Map(response);
         String openid = map.get("openid");
         if (openid == null) throw new IllegalStateException("获取openid失败");
         log.info("小程序用户 code={} openid={}",code,openid);

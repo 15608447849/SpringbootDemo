@@ -1,15 +1,13 @@
 package com.bottle.util;
 
-import com.bottle.jdbc.JDBCRecode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Properties;
 
-public class ObjectUtil {
+public final class ObjectUtil {
     private static final Logger logger = LoggerFactory.getLogger(ObjectUtil.class);
 
     /**

@@ -2,7 +2,7 @@ package com.bottle.util;
 
 import java.text.SimpleDateFormat;
 
-public class TimeUtil {
+public final class TimeUtil {
     /* 年月日 时分秒 */
     public final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     /* 年月日 */

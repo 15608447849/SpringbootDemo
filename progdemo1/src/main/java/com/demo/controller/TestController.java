@@ -1,10 +1,11 @@
 package com.demo.controller;
 
 import com.bottle.jdbc.JDBC;
-import com.demo.config.DatabaseConfig;
+import com.bottle.spr.config.DatabaseConfig;
 import com.demo.config.LLMConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
@@ -28,7 +29,7 @@ public class TestController {
     @Autowired
     private RequestMappingHandlerAdapter handlerAdapter;
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public String index(){
         return String.format("demo local time : %s",  new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
     }
@@ -55,7 +56,7 @@ public class TestController {
         try {
             throw new IllegalArgumentException("我是一个错误");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 

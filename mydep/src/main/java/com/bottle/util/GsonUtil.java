@@ -10,7 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -28,9 +27,9 @@ import java.util.List;
  * Created by Leeping on 2018/6/27.
  * email: 793065165@qq.com
  */
-public class GoogleGsonUtil {
+public final class GsonUtil {
 
-    private static final Logger logger = LoggerFactory.getLogger(GoogleGsonUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(GsonUtil.class);
 
     public interface GsonPauseErrorPrintI{
         void jsonPauseError(String jsonText,Class<?> classType,Type type, Throwable e,String errorInfo);
@@ -41,7 +40,7 @@ public class GoogleGsonUtil {
     private static GsonPauseErrorPrintI printI = (jsonText, classType, type, e, errorInfo) -> logger.info(errorInfo);
 
     public static void setErrorPrintI(GsonPauseErrorPrintI printI) {
-        GoogleGsonUtil.printI = printI;
+        GsonUtil.printI = printI;
     }
 
     private static void catchJsonPauseError(String jsonText, Throwable ex, Class<?> classType, Type type){
@@ -137,6 +136,7 @@ public class GoogleGsonUtil {
         }
     };
 
+    /** 自定义json解析 */
     private final static Gson builder =  new GsonBuilder()
             .disableHtmlEscaping()
             .registerTypeAdapter(long.class, (JsonSerializer<Long>) (src, typeOfSrc, context) -> new JsonPrimitive(String.valueOf(src)) )
@@ -146,7 +146,7 @@ public class GoogleGsonUtil {
                 String var = src.toPlainString();
                 int index = var.indexOf(".");
                 if (index>0){
-                    //四位小数返回doublue
+                    //四位小数返回 double
                     String lstr = var.substring(index+1);
                     if (lstr.length()<=10){
                         return new JsonPrimitive(Double.valueOf(var));
@@ -163,7 +163,7 @@ public class GoogleGsonUtil {
     /** 判断是否为JSON格式字符串 */
     public static boolean isJsonFormatter(String json) {
         try {
-            if (json==null || json.length()==0) return false;
+            if (json==null || json.isEmpty()) return false;
             JsonParser.parseString(json);
         } catch (Exception e) {
 
@@ -172,11 +172,7 @@ public class GoogleGsonUtil {
         return true;
     }
 
-    /**
-     * javabean to json
-     * @param object
-     * @return
-     */
+    /** javabean to json */
     public static String javaBeanToJson(Object object){
         try {
             if (object!=null){
@@ -186,14 +182,10 @@ public class GoogleGsonUtil {
         return null;
     }
 
-    /**
-     * json to javabean
-     *
-     * @param json
-     */
+    /** json to javabean */
     public static <T> T jsonToJavaBean(String json,Class<T> cls) {
         try {
-            if (json==null || json.length()==0) return null;
+            if (json==null || json.isEmpty()) return null;
             return builder.fromJson(json, cls);//对于javabean直接给出class实例
         } catch (Exception e) {
             catchJsonPauseError(json,e,cls,null);
@@ -201,24 +193,20 @@ public class GoogleGsonUtil {
         return null;
     }
 
-    /**
-     * json to javabean
-     *new TypeToken<List<xxx>>(){}.getType()
-     * @param json
-     */
+    /** json to javabean, new TypeToken<List<xxx>>(){}.getType()  */
     public static <T> T jsonToJavaBean(String json,Type type) {
         try {
-            if (json==null || json.length()==0) return null;
+            if (json==null || json.isEmpty()) return null;
             return builder.fromJson(json, type);//对于javabean直接给出class实例
         } catch (Exception e) {
             catchJsonPauseError(json,e,null,type);
         }
         return null;
     }
-
+    /** 文本转键值对 */
     public static <T,D> HashMap<T,D> string2Map(String json){
         try {
-            if (json==null || json.length()==0) return null;
+            if (json==null || json.isEmpty()) return null;
 
             Type type = new TypeToken<HashMap<T,D>>() {}.getType();
 
@@ -228,11 +216,11 @@ public class GoogleGsonUtil {
         }
         return null;
     }
-
+    /** 文本转列表 */
     public static <T> List<T> json2List(String json,Class<T> clazz){
         List<T> list = new ArrayList<>();
         try {
-            if (json!=null && json.length()>0) {
+            if (json!=null && !json.isEmpty()) {
 
                 JsonElement jsonElement =JsonParser.parseString(json);
                 JsonArray array = jsonElement.getAsJsonArray();
@@ -246,12 +234,10 @@ public class GoogleGsonUtil {
         return list;
     }
 
-    /**
-     * 判断是否是数组类型的json字符串
-     */
+    /** 判断是否是数组类型的json字符串 */
     public static boolean checkJsonIsArray(String json){
         try {
-            if (json==null || json.length()==0) return false;
+            if (json==null || json.isEmpty()) return false;
             Object jsonObj = new JSONTokener(json).nextValue();
             if (jsonObj instanceof JSONArray) {
                 return true;
@@ -262,6 +248,7 @@ public class GoogleGsonUtil {
         return false;
     }
 
+    /** 对象转成int类型 */
     public static int convertInt(Object val){
         return new BigDecimal(String.valueOf(val)).intValue();
     }
@@ -273,9 +260,7 @@ public class GoogleGsonUtil {
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 return gson.toJson(object);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ignored) {}
         return null;
     }
 }

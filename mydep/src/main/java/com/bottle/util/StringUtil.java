@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 
-public class StringUtil {
+public final class StringUtil {
 
     /* 错误输出 */
     public static String printExceptInfo(Throwable ex){

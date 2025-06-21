@@ -1,9 +1,5 @@
 package com.bottle.jdbc;
 
-import com.bottle.util.GoogleGsonUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class JDBCException extends RuntimeException{
 
 

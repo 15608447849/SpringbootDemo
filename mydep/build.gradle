@@ -1,14 +1,16 @@
 
 
 dependencies {
+    // json解析
     api 'com.google.code.gson:gson:2.9.0'
 
-    // 连接池
+    // 数据库连接池
     implementation 'mysql:mysql-connector-java:8.0.30'
-    // 驱动
+    // mysql 驱动
     implementation 'org.apache.tomcat:tomcat-jdbc:9.0.70'
+    // clickhouse 驱动
     implementation 'com.clickhouse:clickhouse-jdbc:0.3.2-patch11:all'
-    // 解析器
+    // sql语法解析器
     implementation 'com.github.jsqlparser:jsqlparser:4.7'
 
 }

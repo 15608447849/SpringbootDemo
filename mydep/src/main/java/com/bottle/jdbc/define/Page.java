@@ -1,10 +1,10 @@
 package com.bottle.jdbc.define;
-import com.bottle.jdbc.JDBCException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.Arrays;
 import java.util.List;
+import com.bottle.jdbc.JDBCException;
 
 /**
  * @Author: leeping
@@ -26,7 +26,7 @@ public class Page{
 
     public Page(int pageIndex, int pageSize) {
        initParam(pageIndex,pageSize);
-        logger.debug(Thread.currentThread() + " 分页 Page : pageIndex=" + pageIndex+" pageSize="+pageSize );
+        logger.debug("{} 分页 Page : pageIndex={} pageSize={}", Thread.currentThread(), pageIndex, pageSize);
     }
 
     /**
@@ -46,13 +46,16 @@ public class Page{
         initParam(pageIndex,pageSize);
     }
 
+    /**
+    * 仅执行实际SQL
+    * */
     public Page(){
         initParam(0,0);
     }
 
     /* 检查是否查询真实SQL */
     public static boolean checkQuery(Page page) {
-        logger.debug("checkQuery : " + (page==null || (page.pageIndex>=0 && page.pageSize>=0) ));
+        logger.debug("checkQuery : {}", page == null || (page.pageIndex >= 0 && page.pageSize >= 0));
         return page==null || (page.pageIndex>=0 && page.pageSize>=0);
     }
 
@@ -98,7 +101,7 @@ public class Page{
             selectTotalSql = null;
         }
 
-        logger.debug(Thread.currentThread()+ " 分页 SQL : " + _selectTotalSql);
+        logger.debug("{} 分页 SQL : {}", Thread.currentThread(), _selectTotalSql);
         if (!_selectTotalSql.equals(NO_QUERY_PAGE)){
             long ts = System.currentTimeMillis();
             List<Object[]> selectTotalResult = optionI.query(_selectTotalSql, params,null);
@@ -109,7 +112,7 @@ public class Page{
 
             // 总数
             this.totalItems = Integer.parseInt(String.valueOf(selectTotalResult.get(0)[0]));
-            logger.debug(Thread.currentThread()+ " 分页 总数 : " +  totalItems +" 用时: "+ (System.currentTimeMillis() - ts));
+            logger.debug("{} 分页 总数 : {} 用时: {}", Thread.currentThread(), totalItems, System.currentTimeMillis() - ts);
         }
 
         if (pageIndex>0 && pageSize>0){
@@ -117,21 +120,9 @@ public class Page{
             int number = pageSize;
             sql =  sql + " LIMIT "+ index+ "," + number;
         }
-        logger.debug(Thread.currentThread()+" 分页 实际查询SQL : " + sql);
+        logger.debug("{} 分页 实际查询SQL : {}", Thread.currentThread(), sql);
 
         return sql;
-    }
-
-    public int getTotalItems() {
-        return totalItems;
-    }
-
-    public int getPageIndex() {
-        return pageIndex;
-    }
-
-    public int getPageSize() {
-        return pageSize;
     }
 
     /* 内存分页 */
@@ -144,6 +135,21 @@ public class Page{
         int end = start + pageSize;
         if (end>=totalItems) end = totalItems;
         return result.subList(start,end);
+    }
+
+    /** 获取总条数 */
+    public int getTotalItems() {
+        return totalItems;
+    }
+
+    /** 获取分页页数 */
+    public int getPageIndex() {
+        return pageIndex;
+    }
+
+    /** 获取分页大小 */
+    public int getPageSize() {
+        return pageSize;
     }
 
 }
