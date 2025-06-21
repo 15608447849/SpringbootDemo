@@ -1,11 +1,9 @@
 package com.demo.controller;
 
 import com.bottle.jdbc.JDBC;
-import com.bottle.jdbc.define.DataBaseType;
 import com.demo.config.DatabaseConfig;
 import com.demo.config.LLMConfig;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

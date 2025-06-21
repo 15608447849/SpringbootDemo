@@ -3,6 +3,21 @@ server:
   port: 8001
   # -Djava.net.preferIPv6Addresses=true
 
+logging:
+  pattern:
+    dateformat: yyyy-MM-dd HH:mm:ss.SSS
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level - %msg%n"
+  file:
+    path: ./logs  # 指定日志目录为当前目录下的logs文件夹
+    name: ./logs/out.log  # 主日志文件路径
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      file-name-pattern: ./logs/%d{yyyyMMdd}%i.log
+      max-history: 30
+      total-size-cap: 10GB
+
 llm:
   ollama:
     url: http://127.0.0.1:7099
