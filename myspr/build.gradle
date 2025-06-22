@@ -2,7 +2,11 @@
 
 dependencies {
     api project(':mydep')
+}
 
+
+springBoot {
+    mainClass = 'com.bottle.spr'
 }
 
 

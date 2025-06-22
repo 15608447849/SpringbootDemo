@@ -3,7 +3,6 @@ package com.bottle.jdbc;
 import com.bottle.jdbc.define.DataBaseType;
 import com.bottle.jdbc.imp.JDBCConnection;
 import com.bottle.jdbc.imp.JDBCSessionFacade;
-import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

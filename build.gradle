@@ -1,41 +1,39 @@
 
-// 应用插件
 plugins {
-    id 'java'
-    id 'java-library'
-    id 'groovy'
-    id 'org.springframework.boot' version '3.2.0'
-    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.springframework.boot' version '3.2.0' apply false
+    id 'io.spring.dependency-management' version '1.1.4' apply false
+}
+
+
+allprojects {
+    repositories {
+        maven{ url = 'https://maven.aliyun.com/repository/public'}
+        maven{ url = 'https://maven.aliyun.com/repository/central'}
+        maven{ url = 'https://maven.aliyun.com/repository/google'}
+        maven{ url = 'https://maven.aliyun.com/repository/apache-snapshots'}
+        maven { url = "https://jitpack.io" }
+        mavenCentral()
+        google()
+    }
 }
 
 
 
-subprojects {
-
+subprojects { sub ->
+    // 内置
     apply plugin: 'java'
     apply plugin: 'java-library'
     apply plugin: 'groovy'
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'io.spring.dependency-management'
-
-
-    repositories {
-        maven{ url 'https://maven.aliyun.com/repository/central'}
-        maven{ url 'https://maven.aliyun.com/repository/public'}
-        maven{ url 'https://maven.aliyun.com/repository/google'}
-        maven{ url 'https://maven.aliyun.com/repository/apache-snapshots'}
-        maven { url "https://jitpack.io" }
-        mavenCentral()
-        google()
-
-    }
 
 
     group = 'com.demo'
     version = '0.0.1-SNAPSHOT'
 
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    java {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+
 
     compileJava {
         [compileJava]*.options*.encoding = 'UTF-8'
@@ -45,9 +43,14 @@ subprojects {
         options.encoding = "UTF-8"
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile).configureEach {
+            options.compilerArgs << "-Xlint:-deprecation"
+        }
+    }
 
     tasks.withType(Javadoc).configureEach {
-        failOnError false
+        failOnError = false
         options.addStringOption('Xdoclint:none', '-quiet')
         options.addStringOption('encoding', 'UTF-8')
         options.addStringOption('charSet', 'UTF-8')
@@ -85,36 +88,61 @@ subprojects {
         exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
     }
 
-    dependencies  {
-        implementation ('org.springframework.boot:spring-boot-starter') {
+
+    if (sub.name == 'mydep') {
+        return
+    }
+
+    // spring boot 部分
+
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.boot:spring-boot-dependencies:3.2.0"
+        }
+    }
+
+
+    dependencies {
+        implementation('org.springframework.boot:spring-boot-starter') {
             exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
         }
         implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
         implementation 'org.springframework.boot:spring-boot-starter-aop'
         implementation 'org.springframework.boot:spring-boot-starter-web'
+
         implementation 'org.projectlombok:lombok:1.18.30'
         annotationProcessor 'org.projectlombok:lombok:1.18.30'
     }
 
 
-    bootJar.zip64=true
-    bootJar.doLast{
-        copy {
-            File jar = file(layout.buildDirectory +"/libs/${archiveFileName}")
-            File storage = file(SHODOW_COMPLETE_JAR_DIR+"/${archiveFileName}")
-            from jar
-            into storage.parent
-            println("打包: ${archiveFileName} \t时间: ${new Date().format("yyyyMMdd HH:mm:ss:SSS")} \t大小: ${jar.length()} byte" +
-                    "\n原位置: ${jar}\n移动到: ${  storage }")
-        }.with {
-            def result = providers.exec {
-                executable '../gradlew.bat'
-                args 'clean'
+    bootJar {
+        zip64 = true
+        version = new Date().format("yyyyMMddHHmmssSSS")
+
+        def archiveFileName = bootJar.archiveFileName.get()
+        def jar = file("${layout.buildDirectory.asFile.get()}/libs/${archiveFileName}")
+        def storage = file("${project.rootDir}/${COMPLETE_JAR_DIR}/${archiveFileName}")
+        def subBuildDir = project.rootProject.subprojects
+        doLast {
+            copy {
+                println("✅ 打包完成: ${archiveFileName} \t时间: ${new Date().format("yyyy-MM-dd HH:mm:ss:SSS")}")
+                from jar
+                into storage.parent
+                println("✅ 完成复制: ${archiveFileName} \t 大小: ${jar.length()}b \n原位置: ${jar}\n移动到: ${storage}")
             }
-            println("******** 已清理模块 ********")
+        }.doLast {
+            subBuildDir.each { subProject ->
+                def buildDir = file("${subProject.projectDir}/build")
+                println "✅ 已清理模块 build 目录: ${buildDir} delete = ${delete buildDir}"
+            }
         }
     }
-
 }
+
+
+
 

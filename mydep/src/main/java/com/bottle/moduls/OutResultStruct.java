@@ -2,9 +2,8 @@ package com.bottle.moduls;
 
 
 import com.bottle.util.GsonUtil;
-import lombok.Getter;
 
-@Getter
+
 public final class OutResultStruct {
 
     interface CODE{

@@ -1,11 +1,27 @@
+//plugins {
+////    id 'java' apply false
+////    id 'java-library' apply false
+////    id 'groovy' apply false
+//
+//    id 'org.springframework.boot' version '3.2.0' apply true
+//    id 'io.spring.dependency-management' version '1.1.4'
+//}
+//
+//apply plugin: 'org.springframework.boot'
+//apply plugin: 'io.spring.dependency-management'
 
 
 dependencies {
     api project(':myspr')
+
     implementation 'dev.langchain4j:langchain4j:0.29.0'
     implementation 'dev.langchain4j:langchain4j-ollama:0.29.0'
     implementation 'dev.langchain4j:langchain4j-open-ai:0.29.0'
 
 }
 
+
+springBoot {
+    mainClass = 'com.demo.AppMain'
+}
 
