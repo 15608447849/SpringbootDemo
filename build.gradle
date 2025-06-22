@@ -1,8 +1,12 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-    id 'org.springframework.boot' version '3.2.0' apply false
-    id 'io.spring.dependency-management' version '1.1.4' apply false
+    id 'org.springframework.boot' version '3.5.3' apply false
+    id 'io.spring.dependency-management' version '1.1.7' apply false
 }
+
+
+
 
 
 allprojects {
@@ -98,21 +102,39 @@ subprojects { sub ->
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
 
+
+    // bom版本查询: https://spring.io/projects/spring-cloud-alibaba https://sca.aliyun.com/docs/2023/overview/version-explain/
     dependencyManagement {
         imports {
-            mavenBom "org.springframework.boot:spring-boot-dependencies:3.2.0"
+            mavenBom(SpringBootPlugin.BOM_COORDINATES)
+
+//            mavenBom "org.springframework.cloud:spring-cloud-dependencies:2024.0.0"
+//            mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:2024.0.0.0"
+
+            mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+            mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2025.0.0'
+            mavenBom 'com.alibaba.cloud:spring-cloud-alibaba-dependencies:2023.0.1.3'
+
         }
     }
 
 
+
     dependencies {
+        // boot核心
         implementation('org.springframework.boot:spring-boot-starter') {
             exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
         }
+        // 使用log4j2
         implementation 'org.springframework.boot:spring-boot-starter-log4j2'
-
-        implementation 'org.springframework.boot:spring-boot-starter-aop'
+        // web容器
         implementation 'org.springframework.boot:spring-boot-starter-web'
+        // aop切面
+        implementation 'org.springframework.boot:spring-boot-starter-aop'
+        // 测试类
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+
 
         implementation 'org.projectlombok:lombok:1.18.30'
         annotationProcessor 'org.projectlombok:lombok:1.18.30'

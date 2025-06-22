@@ -1,14 +1,3 @@
-//plugins {
-////    id 'java' apply false
-////    id 'java-library' apply false
-////    id 'groovy' apply false
-//
-//    id 'org.springframework.boot' version '3.2.0' apply true
-//    id 'io.spring.dependency-management' version '1.1.4'
-//}
-//
-//apply plugin: 'org.springframework.boot'
-//apply plugin: 'io.spring.dependency-management'
 
 
 dependencies {
@@ -18,6 +7,13 @@ dependencies {
     implementation 'dev.langchain4j:langchain4j-ollama:0.29.0'
     implementation 'dev.langchain4j:langchain4j-open-ai:0.29.0'
 
+
+    // 服务注册-发现
+    implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery'
+    // 服务间调用
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+
 }
 
 
@@ -25,3 +21,10 @@ springBoot {
     mainClass = 'com.demo.AppMain'
 }
 
+
+test {
+    useJUnitPlatform()
+    filter {
+        includeTestsMatching "com.demo.*"  // 包含指定包下的所有测试
+    }
+}

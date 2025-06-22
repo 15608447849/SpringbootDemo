@@ -3,6 +3,10 @@ package com.bottle.moduls;
 
 import com.bottle.util.GsonUtil;
 
+import java.lang.reflect.Type;
+
+import static com.bottle.util.GsonUtil.jsonToJavaBean;
+
 
 public final class OutResultStruct {
 
@@ -80,4 +84,17 @@ public final class OutResultStruct {
    public String toString() {
       return GsonUtil.javaBeanToJson(this);
    }
+
+   public <T> T getData(Class<T> cls) {
+      String json = GsonUtil.javaBeanToJson(data);
+      if (json == null) return null;
+      return GsonUtil.jsonToJavaBean(json,cls);
+   }
+
+   public <T> T getData(Type type) {
+      String json = GsonUtil.javaBeanToJson(data);
+      if (json == null) return null;
+      return GsonUtil.jsonToJavaBean(json,type);
+   }
+
 }
