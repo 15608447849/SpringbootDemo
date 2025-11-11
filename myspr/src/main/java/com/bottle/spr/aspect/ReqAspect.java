@@ -1,14 +1,11 @@
 package com.bottle.spr.aspect;
 
-import com.bottle.util.StringUtil;
-import com.bottle.moduls.OutResultStruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -18,18 +15,18 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import java.util.Arrays;
 import java.util.Enumeration;
 
+
+@Slf4j
 @Aspect
 @Component
-@Slf4j
 public class ReqAspect {
 
     @Autowired
     private RequestMappingHandlerAdapter handlerAdapter;
 
     // execution(返回值类型 包名.类名.方法名(参数)) execution(* com.demo.controller..*.*(..))
-    @Around("(@within(org.springframework.web.bind.annotation.RestController) || @within(org.springframework.stereotype.Controller))" +
-            " && " +
-            "(@annotation(org.springframework.web.bind.annotation.RequestMapping) " +
+    @Around("(@within(org.springframework.web.bind.annotation.RestController) || @within(org.springframework.stereotype.Controller)) " +
+            "&& (@annotation(org.springframework.web.bind.annotation.RequestMapping) " +
             "|| @annotation(org.springframework.web.bind.annotation.GetMapping) " +
             "|| @annotation(org.springframework.web.bind.annotation.PostMapping) " +
             "|| @annotation(org.springframework.web.bind.annotation.PutMapping) " +

@@ -5,7 +5,6 @@ import com.bottle.util.GsonUtil;
 
 import java.lang.reflect.Type;
 
-import static com.bottle.util.GsonUtil.jsonToJavaBean;
 
 
 public final class OutResultStruct {
@@ -25,8 +24,10 @@ public final class OutResultStruct {
    private Object data;
    /** 分页信息 默认关联
     * @see com.bottle.jdbc.define.Page
-    * */
+    */
    private Object pageInfo;
+
+   public OutResultStruct() {}
 
    /* 成功 */
    public OutResultStruct success(String message, Object data){
@@ -97,4 +98,20 @@ public final class OutResultStruct {
       return GsonUtil.jsonToJavaBean(json,type);
    }
 
+
+   public int getCode() {
+      return code;
+   }
+
+   public String getMessage() {
+      return message;
+   }
+
+   public Object getData() {
+      return data;
+   }
+
+   public Object getPageInfo() {
+      return pageInfo;
+   }
 }

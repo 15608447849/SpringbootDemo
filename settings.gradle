@@ -3,5 +3,5 @@ rootProject.name = 'SpringbootDemo'
 include 'mydep'
 include 'myspr'
 
-include 'progdemo1'
+include 'server-llm'
 

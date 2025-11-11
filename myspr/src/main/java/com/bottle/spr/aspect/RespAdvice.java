@@ -1,8 +1,8 @@
 package com.bottle.spr.aspect;
 
+import com.bottle.moduls.OutResultStruct;
 import com.bottle.util.GsonUtil;
 import com.bottle.util.StringUtil;
-import com.bottle.moduls.OutResultStruct;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +37,24 @@ public class RespAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        log.info("beforeBodyWrite {} ", body);
+        log.info("RespAdvice beforeBodyWrite returnType={} body= {} ",  returnType, body);
+
+
+        if (body instanceof byte[]) {
+            return body;
+        }
+
+        // Swagger 直接返回原始配置信息
+        String requestPath = request.getURI().getPath();
+        if (requestPath.contains("/swagger-ui/") || requestPath.contains("/v3/api-docs") || requestPath.contains("openapiJson")) {
+            return body; // 不包装 Swagger 相关接口的返回值
+        }
 
         // 统一包装返回值
         if (body instanceof OutResultStruct){
             return body;
         }
+
         OutResultStruct resp = new OutResultStruct();
         resp.success(body);
 
@@ -61,7 +73,7 @@ public class RespAdvice implements ResponseBodyAdvice<Object> {
     // 处理异常
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<OutResultStruct> handleBusinessException(Throwable e) {
-        log.error("handleBusinessException",e);
+        log.error("RespAdvice handleBusinessException",e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 e instanceof IllegalStateException || e instanceof IllegalArgumentException ?
                         new OutResultStruct().fail(e.getMessage()) :
