@@ -1,0 +1,43 @@
+
+
+dependencies {
+    api project(':myspr')
+
+    implementation 'dev.langchain4j:langchain4j:0.29.0'
+    implementation 'dev.langchain4j:langchain4j-ollama:0.29.0'
+    implementation 'dev.langchain4j:langchain4j-open-ai:0.29.0'
+
+
+    // nacos 服务注册发现
+    implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery'
+    // nacos 配置中心
+    implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config'
+
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+
+
+    // 服务间调用
+//        implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+
+
+//    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14'
+
+
+
+}
+
+
+springBoot {
+    mainClass = 'com.demo.AppMain'
+}
+
+
+test {
+    useJUnitPlatform()
+    filter {
+        includeTestsMatching "com.demo.*"  // 包含指定包下的所有测试
+    }
+}
